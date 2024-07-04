@@ -12,6 +12,7 @@
   "dependencies": {
     "@tauri-apps/api": "^1",
     "less": "^4.2.0",
+    "pug": "^3.0.3",
     "vue": "^3.3.4"
   },
   "devDependencies": {
