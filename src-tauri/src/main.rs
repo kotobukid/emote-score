@@ -13,19 +13,30 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-fn main() -> std::io::Result<()> {
-    dotenv().ok();
+#[tauri::command]
+fn get_image_list() -> Vec<String> {
     let file_dir = env::var("FILE_DIR").expect("FILE_DIR is not defined in .env file");
     let dir: PathBuf = env::current_dir().unwrap().join(file_dir);
 
-    let files: Vec<String> = images::visit_dirs(&dir).unwrap();
+    images::visit_dirs(&dir).unwrap()
+}
 
-    files.iter().for_each(|f| {
-        println!("{}", f);
-    });
+fn main() -> std::io::Result<()> {
+    dotenv().ok();
+    // let file_dir = env::var("FILE_DIR").expect("FILE_DIR is not defined in .env file");
+    // let dir: PathBuf = env::current_dir().unwrap().join(file_dir);
+    //
+    // let files: Vec<String> = images::visit_dirs(&dir).unwrap();
+    //
+    // files.iter().for_each(|f| {
+    //     println!("{}", f);
+    // });
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            get_image_list
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
